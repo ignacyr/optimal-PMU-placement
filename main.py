@@ -2,22 +2,33 @@ import networkx as nx
 import numpy as np
 from optimal_pmu_placement import *
 import matplotlib.pyplot as plt
+import random as rd
+
 
 G = nx.Graph()
-G.add_nodes_from([1, 2, 3, 4, 5, 6, 7, 8, 9])
-G.add_edge(1, 2)
-G.add_edge(1, 3)
-G.add_edge(2, 3)
-G.add_edge(2, 4)
-G.add_edge(2, 5)
-G.add_edge(6, 7)
-G.add_edge(7, 8)
-G.add_edge(8, 9)
-G.add_edge(3, 9)
-G.add_edge(1, 5)
-G.add_edge(1, 4)
-G.add_edge(3, 7)
-G.add_edge(5, 8)
+number_of_nodes = int(rd.random()*50)+2400
+G.add_nodes_from(np.linspace(1, number_of_nodes, number_of_nodes, dtype='int'))
+edges = []
+for i in range(1, number_of_nodes+1):
+    zmienna_pomocnicza = True
+    while zmienna_pomocnicza:
+        j = rd.randrange(1, number_of_nodes)
+        if i != j:
+            edges.append((i, j))
+            zmienna_pomocnicza = False
+for k in range(20):
+    j = rd.randrange(1, number_of_nodes)
+    i = rd.randrange(1, number_of_nodes)
+    if i != j:
+        edges.append((i, j))
+
+
+
+
+print(edges)
+print(G.nodes)
+G.add_edges_from(edges)
+
 
 
 
