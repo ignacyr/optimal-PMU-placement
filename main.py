@@ -3,6 +3,7 @@ import numpy as np
 from optimal_pmu_placement import *
 import matplotlib.pyplot as plt
 import random as rd
+from genetic_algorithm import genetic_algorithm
 
 
 G = nx.Graph()
@@ -22,20 +23,7 @@ for k in range(10):
     if i != j:
         edges.append((i, j))
 
-
-
-
-print(edges)
-print(G.nodes)
 G.add_edges_from(edges)
-
-
-
-
-
-
-# nx.draw(G, with_labels=True)
-# plt.show()
 
 bla = nx.to_numpy_array(G)
 
@@ -58,9 +46,17 @@ print(wynik_dfs)
 color_map = np.full(G.number_of_nodes(), 'magenta')
 color_map[wynik_dfs-1] = 'yellow'
 
+# nx.draw(G, node_color=color_map, with_labels=True)
+# plt.show()
 
-# plt.figure()
+wynik_gen = np.array(genetic_algorithm(B)).T
+wynik_gen = np.reshape(wynik_gen, (wynik_gen.size, ))
+print(wynik_gen)
+color_map = np.full(G.number_of_nodes(), 'magenta')
+color_map[wynik_gen-1] = 'yellow'
 
 nx.draw(G, node_color=color_map, with_labels=True)
 plt.show()
 
+print("DFS:         ", wynik_dfs)
+print("Genetic alg: ", wynik_gen)
