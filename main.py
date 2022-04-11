@@ -6,7 +6,7 @@ import random as rd
 
 
 G = nx.Graph()
-number_of_nodes = int(rd.random()*50)+2400
+number_of_nodes = int(rd.random()*20)+20
 G.add_nodes_from(np.linspace(1, number_of_nodes, number_of_nodes, dtype='int'))
 edges = []
 for i in range(1, number_of_nodes+1):
@@ -16,7 +16,7 @@ for i in range(1, number_of_nodes+1):
         if i != j:
             edges.append((i, j))
             zmienna_pomocnicza = False
-for k in range(20):
+for k in range(10):
     j = rd.randrange(1, number_of_nodes)
     i = rd.randrange(1, number_of_nodes)
     if i != j:
@@ -60,6 +60,7 @@ color_map[wynik_dfs-1] = 'yellow'
 
 
 # plt.figure()
+
 nx.draw(G, node_color=color_map, with_labels=True)
 plt.show()
 
