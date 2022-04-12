@@ -1,7 +1,5 @@
 import numpy as np
 from numpy.random import default_rng
-import networkx as nx
-import math
 
 
 def foo(placement, adjacency_m):
@@ -24,15 +22,16 @@ def fitness(placement, adjacency_m):
 
 
 def genetic_algorithm(adjacency_matrix):
-    final_solution = np.array([])
+    final_solution = np.array([0])
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    for i in range(1000):
+    for i in range(5000):
         n_of_pmu = rng.choice(number_of_buses) + 1
         solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
-    for i in range(50):  # max number of iterations of genetic algorithm
+    best_solutions = []
+    for i in range(200):  # max number of iterations of genetic algorithm
         ranked_solutions = []
         for s in solutions:
             ranked_solutions.append((fitness(s, adjacency_matrix), s))
@@ -40,12 +39,16 @@ def genetic_algorithm(adjacency_matrix):
         ranked_solutions = list(filter(lambda x: x[0] > 0, ranked_solutions))
 
         print(f"=== Gen {i+1} best solution === ")
+
         if ranked_solutions:
             print(ranked_solutions[0])
-            final_solution = ranked_solutions[0][1]
-            best_solutions = ranked_solutions[:10]
-        else:
-            return final_solution
+            if 0 < fitness(ranked_solutions[0][1], adjacency_matrix) < fitness(final_solution, adjacency_matrix):
+                final_solution = ranked_solutions[0][1]
+            if not final_solution.any():
+                final_solution = ranked_solutions[0][1]
+            best_solutions = ranked_solutions[:100]
+        # else:
+        #     return final_solution
 
         elements = np.array([], dtype=int)
         num_of_els = np.array([], dtype=int)
@@ -55,12 +58,11 @@ def genetic_algorithm(adjacency_matrix):
             elements = np.append(elements, rng.integers(number_of_buses)+1)  # random bus as a mutation
 
         new_gen = []
-        while len(new_gen) < 100:
+        while len(new_gen) < 1000:
             size = np.min(num_of_els) - rng.integers(2)
             element = rng.choice(elements, size, replace=True)
             element = np.unique(element.astype(int))
-            if fitness(element, adjacency_matrix) > 0:
-                new_gen.append(element)
+            new_gen.append(element)
 
         solutions = new_gen
     return final_solution
