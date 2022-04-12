@@ -1,62 +1,55 @@
 import networkx as nx
-import numpy as np
 from optimal_pmu_placement import *
 import matplotlib.pyplot as plt
 import random as rd
 from genetic_algorithm import genetic_algorithm
 
+# rd.seed(1234)
 
 G = nx.Graph()
-number_of_nodes = int(rd.random()*20)+20
-G.add_nodes_from(np.linspace(1, number_of_nodes, number_of_nodes, dtype='int'))
-edges = []
-for i in range(1, number_of_nodes+1):
-    zmienna_pomocnicza = True
-    while zmienna_pomocnicza:
-        j = rd.randrange(1, number_of_nodes)
-        if i != j:
-            edges.append((i, j))
-            zmienna_pomocnicza = False
-for k in range(10):
-    j = rd.randrange(1, number_of_nodes)
-    i = rd.randrange(1, number_of_nodes)
-    if i != j:
-        edges.append((i, j))
+number_of_buses = int(rd.random()*20)+20  # generate random number of buses
+G.add_nodes_from(np.linspace(1, number_of_buses, number_of_buses, dtype='int'))  # add buses to graph
 
-G.add_edges_from(edges)
+# generate one random connection for every bus
+connections = []
+for i in range(1, number_of_buses+1):
+    while True:
+        k = rd.randrange(1, number_of_buses)
+        if i != k:
+            connections.append((i, k))
+            break
 
-bla = nx.to_numpy_array(G)
+# generate 10 more random connections
+for _ in range(10):
+    k = rd.randrange(1, number_of_buses)
+    m = rd.randrange(1, number_of_buses)
+    while True:
+        if m != k:
+            connections.append((m, k))
+            break
 
-np.fill_diagonal(bla, 1)
+# add connections to a graph
+G.add_edges_from(connections)
 
-B = bla
+# convert graph to adjacency matrix and fill diagonal with 1's
+adjacency_matrix = nx.to_numpy_array(G)
+np.fill_diagonal(adjacency_matrix, 1)
 
-# A = np.array([[0., 1., 1., 0., 1., 1.],
-#               [1., 0., 0., 1., 0., 0.],
-#               [1., 0., 0., 1., 0., 0.],
-#               [0., 1., 1., 0., 0., 0.],
-#               [1., 0., 0., 0., 0., 0.],
-#               [1., 0., 0., 0., 0., 0.]])
-#
-# np.fill_diagonal(A, 1)
+# reshape solution of DFS algorithm
+dfs_solution = dfs(adjacency_matrix).T
+dfs_solution = np.reshape(dfs_solution, (dfs_solution.size, ))
 
-wynik_dfs = dfs(B).T
-wynik_dfs = np.reshape(wynik_dfs, (wynik_dfs.size, ))
-print(wynik_dfs)
+# reshape solution of Genetic Algorithm
+GA_solution = np.array(genetic_algorithm(adjacency_matrix)).T
+GA_solution = np.reshape(GA_solution, (GA_solution.size, ))
+
+# color buses with PMU and draw graph
 color_map = np.full(G.number_of_nodes(), 'magenta')
-color_map[wynik_dfs-1] = 'yellow'
-
-# nx.draw(G, node_color=color_map, with_labels=True)
-# plt.show()
-
-wynik_gen = np.array(genetic_algorithm(B)).T
-wynik_gen = np.reshape(wynik_gen, (wynik_gen.size, ))
-print(wynik_gen)
-color_map = np.full(G.number_of_nodes(), 'magenta')
-color_map[wynik_gen-1] = 'yellow'
-
+color_map[GA_solution-1] = 'yellow'
 nx.draw(G, node_color=color_map, with_labels=True)
 plt.show()
 
-print("DFS:         ", wynik_dfs)
-print("Genetic alg: ", wynik_gen)
+print("DFS:         ", dfs_solution)
+print(len(dfs_solution))
+print("Genetic alg: ", GA_solution)
+print(len(GA_solution))
