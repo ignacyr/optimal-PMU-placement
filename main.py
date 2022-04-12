@@ -40,7 +40,7 @@ dfs_solution = dfs(adjacency_matrix).T
 dfs_solution = np.reshape(dfs_solution, (dfs_solution.size, ))
 
 # reshape solution of Genetic Algorithm
-GA_solution = np.array(genetic_algorithm(adjacency_matrix)).T
+GA_solution = genetic_algorithm(adjacency_matrix).T
 GA_solution = np.reshape(GA_solution, (GA_solution.size, ))
 
 # color buses with PMU and draw graph

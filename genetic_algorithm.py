@@ -14,16 +14,21 @@ def foo(placement, adjacency_m):
 
 
 def fitness(placement, adjacency_m):
-    ans = foo(placement, adjacency_m)
-    return ans
+    number_of_pmu = foo(placement, adjacency_m)
+    if number_of_pmu < 0:
+        return -1
+    points = 0
+    for pmu in placement:
+        points = points + 1/np.sum(adjacency_m[pmu-1])
+    return points
 
 
 def genetic_algorithm(adjacency_matrix):
-    final_solution = 0
+    final_solution = np.array([])
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    for i in range(10000):
+    for i in range(1000):
         n_of_pmu = rng.choice(number_of_buses) + 1
         solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
@@ -34,7 +39,7 @@ def genetic_algorithm(adjacency_matrix):
         ranked_solutions.sort(key=lambda y: y[0])
         ranked_solutions = list(filter(lambda x: x[0] > 0, ranked_solutions))
 
-        print(f"=== Gen {i} best solution === ")
+        print(f"=== Gen {i+1} best solution === ")
         if ranked_solutions:
             print(ranked_solutions[0])
             final_solution = ranked_solutions[0][1]
@@ -47,11 +52,15 @@ def genetic_algorithm(adjacency_matrix):
         for s in best_solutions:
             elements = np.append(elements, s[1])
             num_of_els = np.append(num_of_els, s[1].size)
-            elements = np.append(elements, rng.integers(number_of_buses)+1)
+            elements = np.append(elements, rng.integers(number_of_buses)+1)  # random bus as a mutation
+
         new_gen = []
-        for _ in range(2000):
-            size = np.min(num_of_els) + rng.integers(5) - 2
+        while len(new_gen) < 100:
+            size = np.min(num_of_els) - rng.integers(2)
             element = rng.choice(elements, size, replace=True)
-            new_gen.append(np.unique(element.astype(int)))
+            element = np.unique(element.astype(int))
+            if fitness(element, adjacency_matrix) > 0:
+                new_gen.append(element)
+
         solutions = new_gen
     return final_solution
