@@ -1,8 +1,9 @@
 import networkx as nx
-from optimal_pmu_placement import *
+import dfs
 import matplotlib.pyplot as plt
 import random as rd
-from genetic_algorithm import genetic_algorithm
+import genetic_algorithm as ga
+import numpy as np
 
 # rd.seed(1234)
 
@@ -36,11 +37,11 @@ adjacency_matrix = nx.to_numpy_array(G)
 np.fill_diagonal(adjacency_matrix, 1)
 
 # reshape solution of DFS algorithm
-dfs_solution = dfs(adjacency_matrix).T
+dfs_solution = dfs.dfs(adjacency_matrix).T
 dfs_solution = np.reshape(dfs_solution, (dfs_solution.size, ))
 
 # reshape solution of Genetic Algorithm
-GA_solution = genetic_algorithm(adjacency_matrix).T
+GA_solution = ga.genetic_algorithm(adjacency_matrix).T
 GA_solution = np.reshape(GA_solution, (GA_solution.size, ))
 
 # color buses with PMU and draw graph
@@ -49,6 +50,7 @@ color_map[GA_solution-1] = 'yellow'
 nx.draw(G, node_color=color_map, with_labels=True)
 plt.show()
 
+print("Number of buses: ", number_of_buses)
 print("DFS:         ", dfs_solution)
 print(len(dfs_solution))
 print("Genetic alg: ", GA_solution)

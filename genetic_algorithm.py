@@ -23,32 +23,33 @@ def fitness(placement, adjacency_m):
 
 def genetic_algorithm(adjacency_matrix):
     final_solution = np.array([0])
+    final_score = 0.0  # change to struct or tuple
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    for i in range(5000):
+    for i in range(1000):
         n_of_pmu = rng.choice(number_of_buses) + 1
         solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
     best_solutions = []
-    for i in range(200):  # max number of iterations of genetic algorithm
+    for i in range(1000):  # max number of iterations of genetic algorithm
         ranked_solutions = []
         for s in solutions:
             ranked_solutions.append((fitness(s, adjacency_matrix), s))
         ranked_solutions.sort(key=lambda y: y[0])
         ranked_solutions = list(filter(lambda x: x[0] > 0, ranked_solutions))
 
-        print(f"=== Gen {i+1} best solution === ")
-
         if ranked_solutions:
-            print(ranked_solutions[0])
             if 0 < fitness(ranked_solutions[0][1], adjacency_matrix) < fitness(final_solution, adjacency_matrix):
                 final_solution = ranked_solutions[0][1]
+                final_score = ranked_solutions[0][0]
             if not final_solution.any():
                 final_solution = ranked_solutions[0][1]
+                final_score = ranked_solutions[0][0]
             best_solutions = ranked_solutions[:100]
-        # else:
-        #     return final_solution
+
+        print(f"=== Gen {i + 1} best solution === ")
+        print(final_score, final_solution)
 
         elements = np.array([], dtype=int)
         num_of_els = np.array([], dtype=int)
@@ -56,7 +57,7 @@ def genetic_algorithm(adjacency_matrix):
             elements = np.append(elements, s[1])
             num_of_els = np.append(num_of_els, s[1].size)
             elements = np.append(elements, rng.integers(number_of_buses)+1)  # random bus as a mutation
-
+        # have to add better mutations
         new_gen = []
         while len(new_gen) < 1000:
             size = np.min(num_of_els) - rng.integers(2)
