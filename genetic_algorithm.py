@@ -2,7 +2,7 @@ import numpy as np
 from numpy.random import default_rng
 
 
-def foo(placement, adjacency_m):
+def foo(placement, adjacency_m):  # dodać do warunku wykluczanie węzłów z jednym połączeniem
     number_of_pmu = placement.size
     for i in range(adjacency_m[0].size):
         bus_connections = np.add(adjacency_m[i].nonzero(), 1)
@@ -27,12 +27,12 @@ def genetic_algorithm(adjacency_matrix):
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    for i in range(1000):
+    for i in range(20):
         n_of_pmu = rng.choice(number_of_buses) + 1
         solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
     best_solutions = []
-    for i in range(1000):  # max number of iterations of genetic algorithm
+    for i in range(10000):  # max number of iterations of genetic algorithm
         ranked_solutions = []
         for s in solutions:
             ranked_solutions.append((fitness(s, adjacency_matrix), s))
@@ -46,7 +46,7 @@ def genetic_algorithm(adjacency_matrix):
             if not final_solution.any():
                 final_solution = ranked_solutions[0][1]
                 final_score = ranked_solutions[0][0]
-            best_solutions = ranked_solutions[:100]
+            best_solutions = ranked_solutions[:2]
 
         print(f"=== Gen {i + 1} best solution === ")
         print(final_score, final_solution)
@@ -59,9 +59,9 @@ def genetic_algorithm(adjacency_matrix):
             elements = np.append(elements, rng.integers(number_of_buses)+1)  # random bus as a mutation
         # have to add better mutations
         new_gen = []
-        while len(new_gen) < 1000:
+        while len(new_gen) < 20:
             size = np.min(num_of_els) - rng.integers(2)
-            element = rng.choice(elements, size, replace=True)
+            element = rng.choice(elements, size, replace=True)  # replace change to False!!!!!!!!!!!!
             element = np.unique(element.astype(int))
             new_gen.append(element)
 
