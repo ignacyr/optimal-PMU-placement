@@ -8,7 +8,7 @@ import numpy as np
 # rd.seed(1234)
 
 G = nx.Graph()
-number_of_buses = int(rd.random()*20)+20  # generate random number of buses
+number_of_buses = int(rd.random()*20)+80  # generate random number of buses
 G.add_nodes_from(np.linspace(1, number_of_buses, number_of_buses, dtype='int'))  # add buses to graph
 
 # generate one random connection for every bus
