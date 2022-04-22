@@ -1,36 +1,33 @@
+# Run this script if you want to calculate number of possible combinations of PMU placement in the power system.
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def factorial(n):
-    return n*factorial(n-1) if n > 1 else 1
-
-
-def calc_poss(n):
-    possibilities = 0
+# Calculate number of combinations of PMU placement in the power system (n - number of buses)
+def calc_combs(n):
+    combinations = 0
     for k in range(n+1):
-        possibilities = possibilities + math.factorial(n+1) / (math.factorial(n+1 - (k+1)) * math.factorial(k+1))
-    return possibilities
+        combinations = combinations + math.factorial(n+1) / (math.factorial(n+1 - (k+1)) * math.factorial(k+1))
+    return combinations
 
 
-def calc_poss_in_range(max_n):
-    poss_in_range = np.zeros(max_n, dtype='object')
+# Calculate number of combinations of PMU placement in range from 1 to max_n buses
+def calc_combs_in_range(max_n):
+    combs_in_range = np.zeros(max_n, dtype='object')
     for n in range(max_n):
-        poss_in_range[n] = calc_poss(n)
-    return poss_in_range
+        combs_in_range[n] = calc_combs(n)
+    return combs_in_range  # return array of possible combinations for from 1 to max_n buses
 
 
 def main():
-    max_nodes = 200
+    max_buses = 50
 
-    # possibilities = np.zeros(nodes, dtype='object')
+    combinations_in_range = calc_combs_in_range(max_buses)
 
-    possibilities_in_range = calc_poss_in_range(max_nodes)
+    print(combinations_in_range)
 
-    print(possibilities_in_range)
-
-    plt.plot(possibilities_in_range)
+    plt.plot(combinations_in_range)
     plt.show()
 
     # x = calc_poss(1000)
