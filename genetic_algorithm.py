@@ -28,12 +28,13 @@ def genetic_algorithm(adjacency_matrix):
     solutions = []
     rng = default_rng()
     solutions_number = 1000
-    for i in range(solutions_number):
-        n_of_pmu = rng.choice(number_of_buses) + 1
-        solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
+    while not solutions:
+        for i in range(solutions_number):
+            n_of_pmu = rng.choice(number_of_buses) + 1
+            solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
     best_solutions = []
-    for i in range(10000):  # max number of iterations of genetic algorithm (generations)
+    for i in range(200):  # max number of iterations of genetic algorithm (generations)
         ranked_solutions = []
         for s in solutions:
             ranked_solutions.append((fitness(s, adjacency_matrix), s))
