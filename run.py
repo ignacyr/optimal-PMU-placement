@@ -1,58 +1,35 @@
 import networkx as nx
-import matplotlib.pyplot as plt
-import random as rd
-import genetic_algorithm as ga
 import numpy as np
 
+import genetic_algorithm as ga
 import plots
+import random_grid_generator as rgg
 
-# rd.seed(1234)
 
-G = nx.Graph()
-min_equal_max = 40  # minimum 3
-n_of_buses_range = {'min': min_equal_max, 'max': min_equal_max}  # minimum 3
-number_of_buses = int(rd.random()*(n_of_buses_range['max']+1 - n_of_buses_range['min'])) + n_of_buses_range['min']
+def use_alg(r_grid):
+    # Convert graph to adjacency matrix and fill diagonal with 1's.
+    adjacency_matrix = nx.to_numpy_array(r_grid)
+    np.fill_diagonal(adjacency_matrix, 1)
 
-# generate one random connection for every bus
-connections = []
-for i in range(1, number_of_buses+1):
-    while len(connections) <= i:
-        k = rd.randrange(1, number_of_buses)
-        if i != k:
-            connections.append((i, k))
+    # Reshape solution of Genetic Algorithm.
+    ga_solution = ga.genetic_algorithm(adjacency_matrix).T
+    ga_solution = np.reshape(ga_solution, (ga_solution.size,))
+    return ga_solution
 
-# generate additional_conns % more random connections
-additional_conns = 30  # [%]
-for i in range(int(number_of_buses * additional_conns / 100)):
-    while len(connections) <= number_of_buses + i:
-        k = rd.randrange(1, number_of_buses)
-        m = rd.randrange(1, number_of_buses)
-        if m != k:
-            connections.append((m, k))
 
-# add connections to a graph
-G.add_edges_from(connections)
+def main():
+    min_buses, max_buses = 20, 30
+    random_grid = rgg.RandomPowerGrid(min_buses, max_buses)
 
-# convert graph to adjacency matrix and fill diagonal with 1's
-adjacency_matrix = nx.to_numpy_array(G)
-np.fill_diagonal(adjacency_matrix, 1)
+    ga_sol = use_alg(random_grid)
 
-# reshape solution of Genetic Algorithm
-GA_solution = ga.genetic_algorithm(adjacency_matrix).T
-GA_solution = np.reshape(GA_solution, (GA_solution.size, ))
+    print("Number of buses: ", random_grid.number_of_nodes())
+    print("Genetic alg: ", ga_sol)
+    print(len(ga_sol))
 
-# color buses with PMU and draw graph
-color_map = np.full(G.number_of_nodes(), 'magenta')
-color_map[GA_solution-1] = 'yellow'
-# nx.draw(G, node_color=color_map, with_labels=True)
-# plt.show()
+    # Bokeh
+    plots.solution_plot(random_grid.number_of_nodes(), random_grid, ga_sol)
 
-print("Number of buses: ", number_of_buses)
-print("Genetic alg: ", GA_solution)
-print(len(GA_solution))
 
-GA_solution = []
-
-# Bokeh
-plots.solution_plot(number_of_buses, G, GA_solution)
-
+if __name__ == '__main__':
+    main()
