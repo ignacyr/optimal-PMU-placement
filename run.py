@@ -1,8 +1,16 @@
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
 import genetic_algorithm as ga
 import random_grid_generator as rgg
+
+import tkinter
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg, NavigationToolbar2Tk)
+# # # Implement the default Matplotlib key bindings.
+# # from matplotlib.backend_bases import key_press_handler
+# from matplotlib.figure import Figure
 
 
 def use_alg(r_grid):
@@ -18,7 +26,7 @@ def use_alg(r_grid):
 
 def main():
     # Minimum and maximum number of electrical buses in a randomly generated power grid model.
-    min_buses, max_buses = 20, 30
+    min_buses, max_buses = 10, 12
 
     # Generating a random power system model.
     random_grid = rgg.RandomPowerGrid(min_buses, max_buses)
@@ -29,6 +37,12 @@ def main():
     # Using a genetic algorithm.
     ga_sol = use_alg(random_grid)
     no_pmu = list(set(random_grid.nodes) - set(ga_sol))
+
+
+    window = tkinter.Tk()
+    fig = plt.figure(0)
+    canvas = FigureCanvasTkAgg(fig, window)
+    canvas.get_tk_widget().grid(row=1, column=1)
 
     # Drawing nodes
     pos = nx.spring_layout(random_grid)
