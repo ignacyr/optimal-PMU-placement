@@ -1,8 +1,7 @@
 import networkx as nx
 
-from bokeh.plotting import figure, show, from_networkx, save, curdoc
-from bokeh.models import Circle, ColumnDataSource, LabelSet
-from bokeh.palettes import Spectral4, Blues4, Spectral8, Blues8
+from bokeh.plotting import figure, show, from_networkx, save, curdoc, output_file
+from bokeh.models import Circle
 
 
 def solution_plot(number_of_buses, G, GA_solution):
@@ -14,10 +13,10 @@ def solution_plot(number_of_buses, G, GA_solution):
     modularity_color = {}
     for i in range(number_of_buses):
         if (i + 1) in GA_solution:
-            modularity_color[i + 1] = Spectral8[2]
+            modularity_color[i + 1] = 'green'
             modularity_class[i + 1] = 'yes'
         else:
-            modularity_color[i + 1] = Spectral8[6]
+            modularity_color[i + 1] = 'red'
             modularity_class[i + 1] = 'no'
 
     nx.set_node_attributes(G, modularity_color, 'modularity_color')
@@ -43,6 +42,5 @@ def solution_plot(number_of_buses, G, GA_solution):
     p.renderers.append(g)
 
     show(p)
-    # save(p, filename=f"graph.html")
+    output_file(filename="graph.html")
 
-    g.node_renderer.glyph.update(fill_color=Spectral8[0])
