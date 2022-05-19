@@ -13,10 +13,10 @@ import genetic_algorithm
 class GUI:
     def __init__(self):
         self.ga_params = {
-            'max_iter': 200,
-            'population_size': 100
+            'max_iter': 10,
+            'population_size': 50
         }
-        self.min_buses, self.max_buses = 40, 50
+        self.min_buses, self.max_buses = 10, 12
 
         self.optimal_solution = False
 
@@ -31,6 +31,8 @@ class GUI:
         ttk.Button(self.frm, text="Optimize", command=lambda: self.__optimize()).grid(column=0, row=0)
         ttk.Button(self.frm, text="Random power grid", command=lambda: self.__randomize()).grid(column=1, row=0)
         ttk.Button(self.frm, text="Quit", command=self.root.quit).grid(column=2, row=0)
+
+        ttk.Entry(self.frm).grid(column=3, row=0)
 
         # Current iteration label
         iteration_of_alg = 0
