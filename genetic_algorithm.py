@@ -41,7 +41,7 @@ def genetic_alg(grid, root, ga_params, figure):
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    solutions_number = ga_params['max_iter']
+    solutions_number = ga_params['population_size']
     while not solutions:
         for i in range(solutions_number):
             n_of_pmu = rng.choice(number_of_buses) + 1
@@ -63,14 +63,14 @@ def genetic_alg(grid, root, ga_params, figure):
             best_solutions = ranked_solutions[:solutions_number // 10]
 
         figure.update(grid, final_solution)  # Updating graph
-        print(final_solution)
+        # print(final_solution)
 
         # print(f"=== Gen {i + 1} best solution === ")
         # print(final_score, final_solution)
 
         # For GUI
         iteration_of_alg = i + 1
-        var.set(f"{iteration_of_alg} / {ga_params['max_iter']}")
+        var.set(f"Iteration: {iteration_of_alg} / {ga_params['max_iter']}")
         root.update_idletasks()
         # For GUI
 

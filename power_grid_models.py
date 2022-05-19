@@ -37,4 +37,6 @@ class RandomGrid(nx.Graph):
 
 
 class UserDefinedGrid(nx.Graph):
-    pass
+    def __init__(self, nodes_number_entry, incoming_graph_data=None, **attr):
+        super().__init__(incoming_graph_data, **attr)
+        self.add_nodes_from(list(range(1, nodes_number_entry+1)))

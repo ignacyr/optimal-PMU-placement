@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class Figure:
     def __init__(self, power_grid, root):
         self.power_grid = power_grid
-        self.fig = plt.figure(0)
+        self.fig = plt.figure(figsize=(10, 6))
         self.ax = self.fig.add_axes([0.1, 0.1, 0.8, 0.8])
         self.ax.set_xticks([])
         self.ax.set_yticks([])
