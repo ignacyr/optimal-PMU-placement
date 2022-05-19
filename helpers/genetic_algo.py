@@ -71,7 +71,7 @@ def genetic_alg(grid, root, ga_params, figure):
     def mutation():
         pass
 
-    final_solution = np.array([0])
+    final_solution = np.array([])
     number_of_buses = adjacency_matrix[0].size
     all_solutions = []
     rng = default_rng()

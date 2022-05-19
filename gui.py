@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import networkx as nx
+import matplotlib.pyplot as plt
 
 import figure
 from solution import OptimalSolution
@@ -11,7 +12,8 @@ class GUI:
     def __init__(self):
         self.ga_params = {
             'max_iter': 0,
-            'population_size': 50
+            'population_size': 50,
+            'mutation_strength': 1.0
         }
         self.min_buses, self.max_buses = 8, 10
 
@@ -49,12 +51,15 @@ class GUI:
         ttk.Entry(self.frm2, textvariable=self.min_buses_entry, width=15).grid(column=1, row=3)
 
         ttk.Button(self.frm2, text="Optimize", command=lambda: self.__optimize(), padding=10).grid(column=2, row=1)
-        ttk.Label(self.frm2, text="Algorithm iterations:").grid(column=3, row=0)
+        ttk.Label(self.frm2, text="Generations:").grid(column=3, row=0)
         self.max_iter_entry = tk.StringVar()
         ttk.Entry(self.frm2, textvariable=self.max_iter_entry, width=15).grid(column=3, row=1)
         ttk.Label(self.frm2, text="Population size:").grid(column=3, row=2)
         self.population_size_entry = tk.StringVar()
         ttk.Entry(self.frm2, textvariable=self.population_size_entry, width=15).grid(column=3, row=3)
+        ttk.Label(self.frm2, text="Mutation:").grid(column=4, row=0)
+        self.mutation_strength_entry = tk.StringVar()
+        ttk.Entry(self.frm2, textvariable=self.mutation_strength_entry, width=15).grid(column=4, row=1)
 
         var = tk.StringVar()
         var.set(f"Iteration: 0 / {self.ga_params['max_iter']}")
@@ -66,6 +71,7 @@ class GUI:
     def __optimize(self):
         self.ga_params['max_iter'] = int(self.max_iter_entry.get())
         self.ga_params['population_size'] = int(self.population_size_entry.get())
+        self.ga_params['mutation_strength'] = float(self.mutation_strength_entry.get())
         self.label.destroy()
         self.optimal_solution = OptimalSolution(self.power_grid, self.root, self.ga_params, self.figure)
         self.figure.update(self.power_grid, self.optimal_solution.solution)

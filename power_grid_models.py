@@ -33,6 +33,7 @@ class RandomGrid(nx.Graph):
                 if m != k:
                     connections.append((m, k))
 
+        self.add_nodes_from(list(range(1, number_of_buses+1)))
         self.add_edges_from(connections)
 
 

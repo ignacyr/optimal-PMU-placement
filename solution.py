@@ -1,8 +1,7 @@
 import numpy as np
 import networkx as nx
 
-from genetic_algorithm import genetic_alg
-from new_genetic_alg import GeneticAlgorithmOPP
+from genetic_alg import GeneticAlgorithmOPP
 
 
 class OptimalSolution:
