@@ -8,6 +8,8 @@ class Figure:
         self.power_grid = power_grid
         self.fig = plt.figure(0)
         self.ax = self.fig.add_axes([0.1, 0.1, 0.8, 0.8])
+        self.ax.set_xticks([])
+        self.ax.set_yticks([])
 
         self.canvas = FigureCanvasTkAgg(self.fig, root)
         self.canvas.get_tk_widget().grid()

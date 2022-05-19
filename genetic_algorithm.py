@@ -1,8 +1,22 @@
 import numpy as np
 from numpy.random import default_rng
+import tkinter as tk
+import networkx as nx
 
 
-def genetic_alg(adjacency_matrix):
+def genetic_alg(grid, root, ga_params, figure):
+    # Convert graph to adjacency matrix and fill diagonal with 1's.
+    adjacency_matrix = nx.to_numpy_array(grid)
+    np.fill_diagonal(adjacency_matrix, 1)
+
+    # For GUI
+    iteration_of_alg = 0
+    var = tk.StringVar()
+    var.set(f"{iteration_of_alg} / {ga_params['max_iter']}")
+    label = tk.Label(root, textvariable=var)
+    label.grid()
+    # For GUI
+
     if len(adjacency_matrix) == 0:
         return []
 
@@ -24,18 +38,17 @@ def genetic_alg(adjacency_matrix):
         return points
 
     final_solution = np.array([0])
-    final_score = 0.0  # change to struct or tuple
     number_of_buses = adjacency_matrix[0].size
     solutions = []
     rng = default_rng()
-    solutions_number = 50
+    solutions_number = ga_params['max_iter']
     while not solutions:
         for i in range(solutions_number):
             n_of_pmu = rng.choice(number_of_buses) + 1
             solutions.append(rng.choice(number_of_buses, n_of_pmu, replace=False) + 1)
 
     best_solutions = []
-    for i in range(10):  # max number of iterations of genetic algorithm (generations)
+    for i in range(ga_params['max_iter']):  # max number of iterations of genetic algorithm (generations)
         ranked_solutions = []
         for s in solutions:
             ranked_solutions.append((fitness(s, adjacency_matrix), s))
@@ -45,15 +58,21 @@ def genetic_alg(adjacency_matrix):
         if ranked_solutions:
             if 0 < fitness(ranked_solutions[0][1], adjacency_matrix) < fitness(final_solution, adjacency_matrix):
                 final_solution = ranked_solutions[0][1]
-                final_score = ranked_solutions[0][0]
             if not final_solution.any():
                 final_solution = ranked_solutions[0][1]
-                final_score = ranked_solutions[0][0]
             best_solutions = ranked_solutions[:solutions_number // 10]
+
+        figure.update(grid, final_solution)  # Updating graph
+        print(final_solution)
 
         # print(f"=== Gen {i + 1} best solution === ")
         # print(final_score, final_solution)
-        print(i)
+
+        # For GUI
+        iteration_of_alg = i + 1
+        var.set(f"{iteration_of_alg} / {ga_params['max_iter']}")
+        root.update_idletasks()
+        # For GUI
 
         elements = np.array([], dtype=int)
         num_of_els = np.array([], dtype=int)
@@ -70,4 +89,5 @@ def genetic_alg(adjacency_matrix):
             new_gen.append(element)
 
         solutions = new_gen
+    label.destroy()
     return final_solution
