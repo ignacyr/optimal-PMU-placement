@@ -2,24 +2,26 @@ import numpy as np
 from numpy.random import default_rng
 
 
-def genetic_alg(adjacency_matrix):
-    def foo(placement, adjacency_m):  # dodać do warunku wykluczanie węzłów z jednym połączeniem
-        number_of_pmu = placement.size
-        for i in range(adjacency_m[0].size):
-            bus_connections = np.add(adjacency_m[i].nonzero(), 1)
-            if not np.any(np.intersect1d(placement, bus_connections)):  # observability
-                return -1
-        return number_of_pmu
-
-    def fitness(placement, adjacency_m):
-        number_of_pmu = foo(placement, adjacency_m)
-        if number_of_pmu < 0:
+def foo(placement, adjacency_m):  # dodać do warunku wykluczanie węzłów z jednym połączeniem
+    number_of_pmu = placement.size
+    for i in range(adjacency_m[0].size):
+        bus_connections = np.add(adjacency_m[i].nonzero(), 1)
+        if not np.any(np.intersect1d(placement, bus_connections)):  # observability
             return -1
-        points = 0
-        for pmu in placement:
-            points = points + 1 / np.sum(adjacency_m[pmu - 1])
-        return points
+    return number_of_pmu
 
+
+def fitness(placement, adjacency_m):
+    number_of_pmu = foo(placement, adjacency_m)
+    if number_of_pmu < 0:
+        return -1
+    points = 0
+    for pmu in placement:
+        points = points + 1/np.sum(adjacency_m[pmu-1])
+    return points
+
+
+def genetic_algorithm(adjacency_matrix):
     final_solution = np.array([0])
     final_score = 0.0  # change to struct or tuple
     number_of_buses = adjacency_matrix[0].size
@@ -46,7 +48,7 @@ def genetic_alg(adjacency_matrix):
             if not final_solution.any():
                 final_solution = ranked_solutions[0][1]
                 final_score = ranked_solutions[0][0]
-            best_solutions = ranked_solutions[:solutions_number // 10]
+            best_solutions = ranked_solutions[:solutions_number//10]
 
         print(f"=== Gen {i + 1} best solution === ")
         print(final_score, final_solution)
@@ -56,7 +58,7 @@ def genetic_alg(adjacency_matrix):
         for s in best_solutions:
             elements = np.append(elements, s[1])
             num_of_els = np.append(num_of_els, s[1].size)
-            elements = np.append(elements, rng.integers(number_of_buses) + 1)  # random bus as a mutation
+            elements = np.append(elements, rng.integers(number_of_buses)+1)  # random bus as a mutation
         # have to add better mutations
         new_gen = []
         while len(new_gen) < solutions_number:
