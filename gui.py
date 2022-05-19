@@ -16,6 +16,7 @@ class GUI:
         self.min_buses, self.max_buses = 8, 10
 
         self.root = tk.Tk()
+        self.root.title('Optimal PMU placement with genetic algorithm')
         self.root.resizable(height=False, width=False)
         self.frm = ttk.Frame(self.root, padding=10)
         self.frm.grid()

@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 
 from genetic_algorithm import genetic_alg
+from new_genetic_alg import GeneticAlgorithmOPP
 
 
 class OptimalSolution:
@@ -17,6 +18,6 @@ class OptimalSolution:
 
     def __use_alg(self):
         # Reshape solution of Genetic Algorithm.
-        solution = genetic_alg(self.grid, self.root, self.ga_params, self.figure).T
+        solution = GeneticAlgorithmOPP(self.grid, self.ga_params, self.root, self.figure).start().T
         solution = np.reshape(solution, (solution.size,))
         return solution
