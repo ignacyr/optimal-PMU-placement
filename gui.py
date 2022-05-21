@@ -84,6 +84,14 @@ class GUI:
         self.min_buses = int(self.min_buses_entry.get())
         self.max_buses = int(self.max_buses_entry.get())
         self.power_grid = RandomGrid(self.min_buses, self.max_buses)
+
+        # self.power_grid = nx.duplication_divergence_graph(self.min_buses, 0.3)
+        # mapping = dict(zip(self.power_grid.nodes, [x+1 for x in self.power_grid]))
+        # print(mapping)
+        # print(self.power_grid.nodes)
+        # self.power_grid = nx.relabel_nodes(self.power_grid, mapping)
+        # print(self.power_grid.nodes)
+
         self.figure.update(self.power_grid, [])
 
     def __add_nodes_number(self):
