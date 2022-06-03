@@ -6,7 +6,7 @@ import networkx as nx
 
 
 class GeneticAlgorithmOPP:
-    def __init__(self, grid, ga_params, root, figure):
+    def __init__(self, grid, ga_params, root, figure, frm2):
         self.adjacency_matrix = nx.to_numpy_array(grid)
         np.fill_diagonal(self.adjacency_matrix, 1)
 
@@ -19,7 +19,7 @@ class GeneticAlgorithmOPP:
         self.label = tk.Label(root, textvariable=self.var)
         self.label.grid()
         self.break_alg = False
-        ttk.Button(self.root, text="Stop:", command=lambda: self.__break_alg(), padding=10).place(x=800, y=750)
+        ttk.Button(self.root, text="Stop", command=lambda: self.__break_alg(), padding=10).place(x=800, y=750)
         # For GUI
 
         if len(self.adjacency_matrix) == 0:
@@ -36,6 +36,12 @@ class GeneticAlgorithmOPP:
         self.ranked_population = []
         self.best_population = []
         self.final_solution = np.array([])
+
+        self.frm2 = frm2
+
+        self.mutation_strength_entry = tk.StringVar()
+        self.mutation_strength_entry.set(f"{len(self.grid)-1} / {len(self.grid)}")
+        tk.Label(self.frm2, textvariable=self.mutation_strength_entry, width=15).grid(column=4, row=3)
 
     def start(self):
         self.__generate_first_generation()
@@ -94,7 +100,6 @@ class GeneticAlgorithmOPP:
         while len(new_gen) < self.population_size:
             # size = np.min(size_of_best_solutions) - self.rng.integers(2)  # half of numbers is smaller
             size = np.min(size_of_best_solutions) - (1 - bool(int(self.rng.integers(6))))  # one smaller number every 5 numbers
-            print(size)
             element = self.rng.choice(best_buses, size, replace=False)  # replace change to False!!!!!!!!!!!!
             element = np.unique(element.astype(int))
             if self.__fitness(element) > 0:  # Check if observability is
@@ -125,6 +130,7 @@ class GeneticAlgorithmOPP:
             self.root.update()
             if self.break_alg:
                 break
+            self.mutation_strength_entry.set(f"{len(self.final_solution)} / {len(self.grid)}")
 
         self.label.destroy()
 
