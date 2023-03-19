@@ -94,7 +94,7 @@ class GeneticAlgorithmOPP:
         while len(new_gen) < self.population_size:
             # size = np.min(size_of_best_solutions) - self.rng.integers(2)  # half of numbers is smaller
             size = np.min(size_of_best_solutions) - (1 - bool(int(self.rng.integers(6))))  # one smaller number every 5 numbers
-            element = self.rng.choice(best_buses, size, replace=False)  # replace change to False!!!!!!!!!!!!
+            element = self.rng.choice(best_buses, size, replace=False) 
             element = np.unique(element.astype(int))
             if self.__fitness(element) > 0:  # Check if observability is
                 new_gen.append(element)
